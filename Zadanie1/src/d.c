@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#define _GNU_SOURCE
 
 int main() {
 
@@ -25,11 +26,11 @@ int main() {
 
     sleep(5);
     printf("Proces macierzysty: PID=%d PPID=%d UID=%d GID=%d PGID=%d\n\n", getpid(), getppid(), getuid(), getgid(), getpgid(0));
-    printf("Drzewo zapisano do pliku drzewo_genealogiczne.txt \n");
+    printf("Drzewo zapisano do katalogu output/drzewo_genealogiczne.txt \n");
 
     FILE *fp;
-    fp = fopen("files/drzewo_genealogiczne.txt", "w");
-    fprintf(fp, "~~~ PGID=%d ~~~\n\n(PID=%d, PPID=%d)───┬───(PID=%d, PPID=%d)\n                          ├───(PID=%d, PPID=%d)\n                          └───(PID=%d, PPID=%d)\n\n", getpgid(0), getpid(), getppid(), pids[0], getpid(), pids[1], getpid(), pids[2], getpid());
+    fp = fopen("../output/drzewo_genealogiczne.txt", "w");
+    fprintf(fp, "~~~ PGID=%d ~~~\n\n(PID=%d, PPID=%d)───┬───(PID=%d, PPID=%d)\n                         ├───(PID=%d, PPID=%d)\n                         └───(PID=%d, PPID=%d)\n\n", getpgid(0), getpid(), getppid(), pids[0], getpid(), pids[1], getpid(), pids[2], getpid());
     fclose(fp);
 
     return 0;
