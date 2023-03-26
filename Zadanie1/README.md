@@ -27,6 +27,14 @@ Katalog główny zawiera pliki `Makefile` oraz `README.md`. Struktura opiera si�
 | `make run-a`      | Uruchamianie programu `a.c` (w miejsce `a` można wstawić nazwę dowolnego programu a-e) |
 | `make clean`      | Usuwanie plików `*.o` oraz `*.x` |
 
+
+## FAQ
+
+#### Ile procesów powstanie przy n-krotnym wywołaniu funkcji fork i dlaczego?
+
+Przy n-krotnym wywołaniu funkcji fork powstanie 2^n - 1 procesów. Funkcja fork() służy do tworzenia kopii bieżącego procesu w systemie operacyjnym. Gdy wywołujemy funkcję fork() raz, powstaje nowy proces potomny, który jest kopią procesu rodzica. Jeśli wywołamy funkcję fork() po raz drugi, to zarówno proces rodzic, jak i jego pierwszy proces potomny wywołają funkcję fork(), co spowoduje powstanie dwóch kolejnych procesów potomnych.
+
+
 ## Autor
 
 - Patryk Lach
