@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+pid_t getpgid(pid_t pid);
 
 int main () {
 

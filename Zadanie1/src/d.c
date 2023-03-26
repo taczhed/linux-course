@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#define _GNU_SOURCE
+pid_t getpgid(pid_t pid);
 
 int main() {
 
