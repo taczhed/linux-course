@@ -14,39 +14,42 @@ FILE_E = e
 
 .PHONY: help
 help:
-	@echo "make all		Kompiluje wszystkie programy"
-	@echo "make run-all		Uruchamia wszystkie programy"
-	@echo "make run-a	Uruchamia program a (w miejsce a można wstawić nazwę dowolnego programu a-e)"
-	@echo "make clean		Usuwa pliki *.o oraz *.x"
+	@echo "make all		kompiluje wszystkie programy"
+	@echo "make cw1x	kompiluje program do ćwiczenia 1, podpunkt x, gdzie x = [a, b, c, d, e]"
+	@echo "make run-cw1x	uruchamia program do ćwiczenia 1, podpunkt x, gdzie x = [a, b, c, d, e]"
+	@echo "make clean		usuwa wszystkie pliki utworzone przez make"
 
 # budowanie wszystkich plików
 .PHONY: all
 all: $(EXEC_DIR)/${FILE_A}.x $(EXEC_DIR)/${FILE_B}.x $(EXEC_DIR)/${FILE_C}.x $(EXEC_DIR)/${FILE_D}.x $(EXEC_DIR)/${FILE_E}.x
 
-# uruchamianie wszystkich plików
-.PHONY: run-all
-run-all: $(EXEC_DIR)/$(FILE_A).x $(EXEC_DIR)/$(FILE_B).x $(EXEC_DIR)/$(FILE_C).x $(EXEC_DIR)/$(FILE_E).x $(EXEC_DIR)/$(FILE_D).x
-		@./$(EXEC_DIR)/$(FILE_A).x
-		@./$(EXEC_DIR)/$(FILE_B).x
-		@./$(EXEC_DIR)/$(FILE_C).x
-		@./$(EXEC_DIR)/$(FILE_E).x
-		@./$(EXEC_DIR)/$(FILE_D).x
+# budowanie pojedynczego pliku
+.PHONY: cw1$(FILE_A) cw1$(FILE_B) cw1$(FILE_C) cw1$(FILE_D) cw1$(FILE_E)
+cw1$(FILE_A): $(EXEC_DIR)/${FILE_A}.x
 
-# budowanie wszystkich plików
-.PHONY: run-$(FILE_A) run-$(FILE_B)
-run-$(FILE_A): $(EXEC_DIR)/$(FILE_A).x
+cw1$(FILE_B): $(EXEC_DIR)/${FILE_B}.x
+
+cw1$(FILE_C): $(EXEC_DIR)/$(FILE_C).x
+
+cw1$(FILE_D): $(EXEC_DIR)/$(FILE_D).x
+
+cw1$(FILE_E): $(EXEC_DIR)/$(FILE_E).x
+
+# uruchamianie pojedynczego pliku
+.PHONY: run-cw1$(FILE_A) run-cw1$(FILE_B) run-cw1$(FILE_C) run-cw1$(FILE_D) run-cw1$(FILE_E)
+run-cw1$(FILE_A): $(EXEC_DIR)/$(FILE_A).x
 	@./$(EXEC_DIR)/$(FILE_A).x
 
-run-$(FILE_B): $(EXEC_DIR)/$(FILE_B).x
+run-cw1$(FILE_B): $(EXEC_DIR)/$(FILE_B).x
 	@./$(EXEC_DIR)/$(FILE_B).x
 
-run-$(FILE_C): $(EXEC_DIR)/$(FILE_C).x
+run-cw1$(FILE_C): $(EXEC_DIR)/$(FILE_C).x
 	@./$(EXEC_DIR)/$(FILE_C).x
 
-run-$(FILE_D): $(EXEC_DIR)/$(FILE_D).x
+run-cw1$(FILE_D): $(EXEC_DIR)/$(FILE_D).x
 	@./$(EXEC_DIR)/$(FILE_D).x
 
-run-$(FILE_E): $(EXEC_DIR)/$(FILE_E).x
+run-cw1$(FILE_E): $(EXEC_DIR)/$(FILE_E).x
 	@./$(EXEC_DIR)/$(FILE_E).x
 
 # reguła dla pliku obiektowego

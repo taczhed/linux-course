@@ -23,9 +23,9 @@ Katalog główny zawiera pliki `Makefile` oraz `README.md`. Struktura opiera si�
 | :-------- | :-------------------------------- |
 | `make`      | Uruchomienie pomocy |
 | `make all`      | Kompilowanie wszystkich programów |
-| `make run-all`      | Uruchamianie wszystkich programów |
-| `make run-a`      | Uruchamianie programu `a.c` (w miejsce `a` można wstawić nazwę dowolnego programu a-e) |
-| `make clean`      | Usuwanie plików `*.o` oraz `*.x` |
+| `make cw1x`      | Kompilowanie programu do ćwiczenia 1, podpunkt x, gdzie x = [a, b, c, d, e] |
+| `make run-cw1x`      | Uruchamianie programu do ćwiczenia 1, podpunkt x, gdzie x = [a, b, c, d, e] |
+| `make clean`      | Usuwanie wszystkich plików utworzonych przez make |
 
 
 ## FAQ
