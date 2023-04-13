@@ -4,8 +4,7 @@
 #include <unistd.h>
 
 void sig_handler(int signalNumber) {
-    printf("Przechwycono sygnał nr %d\n", signalNumber);
-    printf("Własna obsługa sygnału\n");
+    printf("Przechwycono sygnał nr %d --> własna obsługa sygnału\n", signalNumber);
 }
 
 // Tryby (parametr pierwszy): 
@@ -35,7 +34,7 @@ int main(int argc, char *argv[]) {
             return 1; 
         }
     
-        printf("Oczekiwanie na sygnał\n");
+        printf("Oczekiwanie na sygnał...\n");
         pause();
     }
 
@@ -45,7 +44,7 @@ int main(int argc, char *argv[]) {
             printf("Błąd!\n");
             return 1;
         }
-        printf("Oczekiwanie na sygnał\n");
+        printf("Oczekiwanie na sygnał...\n");
         pause();
     }
     
@@ -55,7 +54,7 @@ int main(int argc, char *argv[]) {
             printf("Błąd!\n");
             return 1;
         }
-        printf("Oczekiwanie na sygnał\n");
+        printf("Oczekiwanie na sygnał...\n");
         pause();
     }
 
