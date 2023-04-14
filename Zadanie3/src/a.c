@@ -7,13 +7,6 @@ void sig_handler(int signalNumber) {
     printf("Przechwycono sygnał nr %d --> własna obsługa sygnału\n", signalNumber);
 }
 
-// Tryby (parametr pierwszy): 
-// - 1 - akcja domyślna, 
-// - 2 - ignorowanie,
-// - 3 - własna obsługa
-
-// Numer sygnału (parametr drugi): np. 2, 15 itd
-
 int main(int argc, char *argv[]) {
 
     if (argc != 3) {
@@ -24,8 +17,7 @@ int main(int argc, char *argv[]) {
     int mode = atoi(argv[1]);
     int signalNumber = atoi(argv[2]);
     
-    printf("Tryb: %d, sygnał: %d\n", mode, signalNumber);
-    printf("PID to %d\n", getpid());
+    printf("Uruchomiono a.c, PID: %d, tryb: %d, sygnał: %d\n", getpid(), mode, signalNumber);
 
     if (mode == 1) {
 

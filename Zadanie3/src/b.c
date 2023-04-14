@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     sscanf(argv[2], "%d", &mode);
     sscanf(argv[3], "%d", &signalNumber);
 
+    printf("Uruchomiono b.c, PID: %d, tryb: %d, sygnał: %d\n", getpid(), mode, signalNumber);
+
     pid = fork();
 
     if (pid < 0) {
