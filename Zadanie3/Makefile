@@ -16,10 +16,10 @@ SIGNAL = 2
 
 .PHONY: help
 help:
-	@echo "make all		Kompiluje wszystkie programy"
-	@echo "make cw3x	Kompiluje program do ćwiczenia 3, podpunkt x, gdzie x = [a, b, c]"
-	@echo "make run-cw3x MODE=3 SINGAL=2	Uruchamia program (z przykładowymi danymi wejściowymi) do ćwiczenia 3, podpunkt x, gdzie x = [a, b, c], MODE to tryb programu (domyślnie 3), SINGAL to sygnał (domyślnie 2)"
-	@echo "make clean		Usuwa wszystkie pliki utworzone przez make"
+	@echo "make all				Kompiluje wszystkie programy"
+	@echo "make cw3x				Kompiluje program do ćwiczenia 3, podpunkt x, gdzie x = [a, b, c]"
+	@echo "make run-cw3x MODE=a SINGAL=b		Uruchamia program (z przykładowymi danymi wejściowymi) do ćwiczenia 3, podpunkt x, gdzie x = [a, b, c], MODE to tryb programu (domyślnie a=3), SINGAL to sygnał (domyślnie b=2)"
+	@echo "make clean				Usuwa wszystkie pliki utworzone przez make"
 
 # budowanie wszystkich plików
 .PHONY: all
