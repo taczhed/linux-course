@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200112L
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -8,15 +10,15 @@
 int main(int argc, char *argv[])
 {
 
-    if (argc != 4) {
+    if (argc != 3) {
         printf("Błąd wejścia\n");
         return 1;
     }
 
     int mode, signalNumber, pid, status;
 
-    sscanf(argv[2], "%d", &mode);
-    sscanf(argv[3], "%d", &signalNumber);
+    sscanf(argv[1], "%d", &mode);
+    sscanf(argv[2], "%d", &signalNumber);
 
     printf("Uruchomiono b.c, PID: %d, tryb: %d, sygnał: %d\n", getpid(), mode, signalNumber);
 
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
     }
 
     else if (pid == 0) {
-        execlp(argv[1], argv[1], argv[2], argv[3], NULL);
+        execlp("./execdir/a.x", "./execdir/a.x", argv[1], argv[2], NULL);
         printf("Błąd przy uruchamianiu programu!\n");
         exit(1);
     }
