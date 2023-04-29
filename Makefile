@@ -1,2 +1,2 @@
 archive: 
-	@tar cvzf cw1.tar.gz Zadanie2
+	@tar cvzf cw3.tar.gz Zadanie4
