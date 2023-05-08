@@ -9,12 +9,12 @@ EXEC_DIR = execdir
 FILE = a
 PRODUCENT = producent
 KONSUMENT = konsument
-POTOK = testpotok
+POTOK = mojfifo
 
 .PHONY: help
 help:
 	@echo "make all		kompiluje programy"
-	@echo "make run-cw5a POTOK=test		uruchamia program a z nazwą potoku"
+	@echo "make run-cw5a POTOK=test		uruchamia program [a-b] z nazwą potoku"
 	@echo "make clean		usuwa wszystkie pliki utworzone przez make"
 
 # budowanie wszystkich plików
@@ -25,6 +25,12 @@ all: $(EXEC_DIR)/${FILE}.x $(EXEC_DIR)/${PRODUCENT}.x $(EXEC_DIR)/${KONSUMENT}.x
 .PHONY: run-cw5a
 run-cw5a: $(EXEC_DIR)/$(FILE).x
 	@./$(EXEC_DIR)/$(FILE).x ./$(SRC_DIR)/input.txt ./$(SRC_DIR)/output.txt $(POTOK)
+
+run-cw5b: $(EXEC_DIR)/$(FILE).x
+	mkfifo $(POTOK)
+	./execdir/producent.x $(POTOK) ./src/input.txt &
+	./execdir/konsument.x $(POTOK) ./src/output.txt
+	rm $(POTOK)
 
 # reguła dla pliku obiektowego
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c

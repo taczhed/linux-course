@@ -20,7 +20,7 @@ Katalog główny zawiera pliki `Makefile` oraz `README.md`. Struktura opiera si�
 | :-------- | :-------------------------------- |
 | `make`      | Uruchomienie pomocy |
 | `make all`      | Kompiluje programy |
-| `make run-cw5a POTOK=test`      | Uruchamia program a z nazwą potoku |
+| `make run-cw5a POTOK=test`      | Uruchamia program [a-b] z nazwą potoku |
 | `make clean`      | Usuwa wszystkie pliki utworzone przez make |
 
 ## Autor
