@@ -12,7 +12,7 @@
 sem_t *sem;
 
 void criticalSection(int processId, int sectionId) {
-    int fd = open("numer.txt", O_RDWR);
+    int fd = open("./src/number.txt", O_RDWR);
     if (fd == -1) {
         perror("open");
         exit(1);
@@ -40,7 +40,7 @@ void criticalSection(int processId, int sectionId) {
 }
 
 int main(int argc, char *argv[]) {
-    sem = openSemaphore("/semaphore");
+    sem = openSemaphore("sem");
 
     int processId = getpid();
     srand(processId);

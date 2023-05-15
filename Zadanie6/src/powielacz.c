@@ -12,6 +12,9 @@
 
 // ./powielacz ./wykluczanie 2 2
 
+// dla 2 2 z sekcja krytyczna -> 4
+// dla 2 2 z bez sekcji krytycznej -> 0
+
 sem_t *sem; // deklaracja wskaźnika na semafor
 
 int main(int argc, char *argv[]) {
@@ -23,7 +26,7 @@ int main(int argc, char *argv[]) {
     char *programName = argv[1];
     int numProcesses = atoi(argv[2]), semValue;
 
-    sem = createSemaphore("/semaphore", 1); // inicjalizacja semafora
+    sem = createSemaphore("sem", 1); // inicjalizacja semafora
 
     printf("Adres semafora: %p\n", (void *)sem);
     semValue = getSemaphoreValue(sem);
@@ -32,7 +35,7 @@ int main(int argc, char *argv[]) {
     atexit(exitHandler);
     signal(SIGINT, sigintHandler);
 
-    int fd = open("numer.txt", O_RDWR);
+    int fd = open("./src/number.txt", O_RDWR);
     if (fd == -1) {
         perror("open");
         return 1;
@@ -60,7 +63,7 @@ int main(int argc, char *argv[]) {
         wait(NULL);
     }
 
-    fd = open("numer.txt", O_RDONLY);
+    fd = open("./src/number.txt", O_RDONLY);
     if (fd == -1) {
         perror("open");
         return 1;
@@ -71,10 +74,11 @@ int main(int argc, char *argv[]) {
     int finalNumber = atoi(readBuf);
 
     printf("Końcowy numer: %d\n", finalNumber);
+    printf("Sprawdzenie : %d\n", atoi(argv[2]) * atoi(argv[2]));
 
     close(fd);
     closeSemaphore(sem);
-    removeSemaphore("/semaphore");
+    removeSemaphore("sem");
 
     return 0;
 }
