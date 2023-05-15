@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     int finalNumber = atoi(readBuf);
 
     printf("Końcowy numer: %d\n", finalNumber);
-    printf("Sprawdzenie : %d\n", atoi(argv[2]) * atoi(argv[2]));
+    printf("Sprawdzenie : %d\n", atoi(argv[2]) * atoi(argv[3]));
 
     close(fd);
     closeSemaphore(sem);
