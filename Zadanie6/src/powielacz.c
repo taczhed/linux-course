@@ -8,42 +8,31 @@
 #include <semaphore.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include "sem_lib.h"
+
+// ./powielacz ./wykluczanie 2 2
 
 sem_t *sem; // deklaracja wskaźnika na semafor
 
-// wyjście z programu
-void exit_handler() {
-    sem_unlink("/semaphore");
-}
-
-// obsługa sygnału Ctrl+C
-void sigint_handler(int signum) {
-    exit(0);
-}
-
 int main(int argc, char *argv[]) {
     if (argc < 4) {
-        printf("Użycie: %s <program> <liczba procesow> <liczba sekcji>\n", argv[0]);
+        printf("Użycie: %s <program> <liczba procesów> <liczba sekcji>\n", argv[0]);
         return 1;
     }
 
     char *programName = argv[1];
     int numProcesses = atoi(argv[2]), semValue;
 
-    sem = sem_open("/semaphore", O_CREAT | O_EXCL, 0666, 1); // inicjalizacja semafora
-    if (sem == SEM_FAILED) {
-        perror("sem_open");
-        return 1;
-    }
+    sem = createSemaphore("/semaphore", 1); // inicjalizacja semafora
 
     printf("Adres semafora: %p\n", (void *)sem);
-    sem_getvalue(sem, &semValue);
+    semValue = getSemaphoreValue(sem);
     printf("Wartość początkowa semafora: %d\n", semValue);
 
-    atexit(exit_handler);
-    signal(SIGINT, sigint_handler);
+    atexit(exitHandler);
+    signal(SIGINT, sigintHandler);
 
-    int fd = open("numer.txt", O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0666);
+    int fd = open("numer.txt", O_RDWR);
     if (fd == -1) {
         perror("open");
         return 1;
@@ -84,8 +73,8 @@ int main(int argc, char *argv[]) {
     printf("Końcowy numer: %d\n", finalNumber);
 
     close(fd);
-    sem_close(sem);
-    sem_unlink("/semaphore");
+    closeSemaphore(sem);
+    removeSemaphore("/semaphore");
 
     return 0;
 }

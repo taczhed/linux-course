@@ -7,6 +7,7 @@
 #include <string.h>
 #include <semaphore.h>
 #include <time.h>
+#include "sem_lib.h"
 
 sem_t *sem;
 
@@ -39,12 +40,7 @@ void criticalSection(int processId, int sectionId) {
 }
 
 int main(int argc, char *argv[]) {
-    sem = sem_open("/semaphore", 0);
-
-    if (sem == SEM_FAILED) {
-        perror("sem_open");
-        return 1;
-    }
+    sem = openSemaphore("/semaphore");
 
     int processId = getpid();
     srand(processId);
@@ -53,13 +49,13 @@ int main(int argc, char *argv[]) {
     int sectionId;
 
     for (sectionId = 0; sectionId < numSections; sectionId++) {
-        sem_wait(sem);
+        waitSemaphore(sem);
         printf("Proces %d - Sekcja krytyczna %d: Wchodzenie do sekcji krytycznej\n", processId, sectionId);
         criticalSection(processId, sectionId);
-        sem_post(sem);
+        postSemaphore(sem);
     }
 
-    sem_close(sem);
+    closeSemaphore(sem);
 
     return 0;
 }
