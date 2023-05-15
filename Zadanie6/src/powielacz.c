@@ -9,19 +9,16 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-#define NUM_PROCESSES 5
-#define NUM_SECTIONS 3
+sem_t *sem; // deklaracja wskaźnika na semafor
 
-sem_t *sem; // Deklaracja wskaźnika na semafor
-
-// Funkcja obsługująca wyjście z programu
+// wyjście z programu
 void exit_handler() {
-    sem_unlink("/semaphore"); // Usunięcie semafora
+    sem_unlink("/semaphore");
 }
 
-// Funkcja obsługująca sygnał SIGINT (Ctrl+C)
+// obsługa sygnału Ctrl+C
 void sigint_handler(int signum) {
-    exit(0); // Zakończenie programu
+    exit(0);
 }
 
 int main(int argc, char *argv[]) {
@@ -30,35 +27,38 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char *program_name = argv[1];
-    int num_processes = atoi(argv[2]);
-    int num_sections = atoi(argv[3]);
+    char *programName = argv[1];
+    int numProcesses = atoi(argv[2]), semValue;
 
-    sem = sem_open("/semaphore", O_CREAT | O_EXCL, 0666, 1); // Tworzenie i inicjalizacja semafora
+    sem = sem_open("/semaphore", O_CREAT | O_EXCL, 0666, 1); // inicjalizacja semafora
     if (sem == SEM_FAILED) {
         perror("sem_open");
         return 1;
     }
 
-    atexit(exit_handler); // Rejestrowanie funkcji obsługi wyjścia z programu
-    signal(SIGINT, sigint_handler); // Rejestrowanie funkcji obsługi sygnału SIGINT
+    printf("Adres semafora: %p\n", (void *)sem);
+    sem_getvalue(sem, &semValue);
+    printf("Wartość początkowa semafora: %d\n", semValue);
 
-    int fd = open("numer.txt", O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    atexit(exit_handler);
+    signal(SIGINT, sigint_handler);
+
+    int fd = open("numer.txt", O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0666);
     if (fd == -1) {
         perror("open");
         return 1;
     }
 
-    char num_str[10];
-    sprintf(num_str, "%d", 0);
-    write(fd, num_str, strlen(num_str));
+    char numStr[10];
+    sprintf(numStr, "%d", 0);
+    write(fd, numStr, strlen(numStr));
     close(fd);
 
     int i;
-    for (i = 0; i < num_processes; i++) {
+    for (i = 0; i < numProcesses; i++) {
         pid_t pid = fork();
         if (pid == 0) {
-            execlp(program_name, program_name, NULL); // Uruchomienie programu realizującego wzajemne wykluczanie
+            execlp(programName, programName, argv[3], NULL); // wykluczanie
             perror("execlp");
             return 1;
         } else if (pid < 0) {
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    for (i = 0; i < num_processes; i++) {
-        wait(NULL); // Oczekiwanie na zakończenie wszystkich procesów potomnych
+    for (i = 0; i < numProcesses; i++) {
+        wait(NULL);
     }
 
     fd = open("numer.txt", O_RDONLY);
@@ -77,15 +77,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char read_buf[10];
-    read(fd, read_buf, sizeof(read_buf));
-    int final_number = atoi(read_buf);
+    char readBuf[10];
+    read(fd, readBuf, sizeof(readBuf));
+    int finalNumber = atoi(readBuf);
 
-    printf("Końcowy numer: %d\n", final_number);
+    printf("Końcowy numer: %d\n", finalNumber);
 
     close(fd);
-    sem_close(sem); // Zamknięcie semafora
-    sem_unlink("/semaphore"); // Usunięcie semafora
+    sem_close(sem);
+    sem_unlink("/semaphore");
 
     return 0;
 }

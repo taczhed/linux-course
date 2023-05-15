@@ -8,58 +8,58 @@
 #include <semaphore.h>
 #include <time.h>
 
-sem_t *sem; // Deklaracja wskaźnika na semafor
+sem_t *sem;
 
-void critical_section(int process_id, int section_id) {
+void criticalSection(int processId, int sectionId) {
     int fd = open("numer.txt", O_RDWR);
     if (fd == -1) {
         perror("open");
         exit(1);
     }
 
-    char read_buf[10];
-    read(fd, read_buf, sizeof(read_buf));
-    int current_number = atoi(read_buf);
-    int new_number = current_number + 1;
+    char readBuf[10];
+    read(fd, readBuf, sizeof(readBuf));
+    int currentNumber = atoi(readBuf);
+    int newNumber = currentNumber + 1;
 
     lseek(fd, 0, SEEK_SET);
-    char num_str[10];
-    sprintf(num_str, "%d", new_number);
-    write(fd, num_str, strlen(num_str));
+    char numStr[10];
+    sprintf(numStr, "%d", newNumber);
+    write(fd, numStr, strlen(numStr));
 
     close(fd);
 
-    printf("Proces %d - Sekcja krytyczna %d: Obecna liczba = %d, Nowa liczba = %d\n", process_id, section_id, current_number, new_number);
+    printf("Proces %d - Sekcja krytyczna %d: Obecna liczba = %d, Nowa liczba = %d\n", processId, sectionId, currentNumber, newNumber);
 
     srand(time(NULL));
-    int sleep_time = rand() % 5 + 1;
-    sleep(sleep_time);
+    int sleepTime = rand() % 5 + 1;
+    sleep(sleepTime);
 
-    printf("Proces %d - Sekcja krytyczna %d: Wychodzenie z sekcji krytycznej\n", process_id, section_id);
+    printf("Proces %d - Sekcja krytyczna %d: Wychodzenie z sekcji krytycznej\n", processId, sectionId);
 }
 
-int main() {
-    sem = sem_open("/semaphore", 0); // Otwarcie semafora
+int main(int argc, char *argv[]) {
+    sem = sem_open("/semaphore", 0);
 
     if (sem == SEM_FAILED) {
         perror("sem_open");
         return 1;
     }
 
-    int process_id = getpid();
-    srand(process_id);
+    int processId = getpid();
+    srand(processId);
 
-    int num_sections = 3;
-    int section_id;
+    int numSections = atoi(argv[1]);
+    int sectionId;
 
-    for (section_id = 0; section_id < num_sections; section_id++) {
-        sem_wait(sem); // Zajęcie semafora
-        printf("Proces %d - Sekcja krytyczna %d: Wchodzenie do sekcji krytycznej\n", process_id, section_id);
-        critical_section(process_id, section_id);
-        sem_post(sem); // Zwolnienie semafora
+    for (sectionId = 0; sectionId < numSections; sectionId++) {
+        sem_wait(sem);
+        printf("Proces %d - Sekcja krytyczna %d: Wchodzenie do sekcji krytycznej\n", processId, sectionId);
+        criticalSection(processId, sectionId);
+        sem_post(sem);
     }
 
-    sem_close(sem); // Zamknięcie semafora
+    sem_close(sem);
 
     return 0;
 }
