@@ -6,6 +6,10 @@
         "signal.h": "c",
         "stdlib.h": "c",
         "types.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "mman.h": "c",
+        "stat.h": "c",
+        "semafor.h": "c",
+        "semaphore.h": "c"
     }
 }

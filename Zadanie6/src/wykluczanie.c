@@ -38,7 +38,7 @@ void criticalSection(int processId, int sectionId)
 
 int main(int argc, char *argv[])
 {
-    sem = openSemaphore("sem");
+    sem = openSemaphore("asdasd");
     int processId = getpid();
     srand(processId);
 

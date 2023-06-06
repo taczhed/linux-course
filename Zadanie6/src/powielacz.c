@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     char *programName = argv[1];
     int numProcesses = atoi(argv[2]), semValue;
 
-    sem = createSemaphore("sem", 1); // inicjalizacja semafora
+    sem = createSemaphore("asdasd", 1); // inicjalizacja semafora
 
     printf("Adres semafora: %p\n", (void *)sem);
     semValue = getSemaphoreValue(sem);
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 
     close(fd);
     closeSemaphore(sem);
-    removeSemaphore("sem");
+    removeSemaphore("asdasd");
 
     return 0;
 }
