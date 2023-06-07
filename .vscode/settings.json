@@ -10,6 +10,7 @@
         "mman.h": "c",
         "stat.h": "c",
         "semafor.h": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "pamiec_dzielona.h": "c"
     }
 }
