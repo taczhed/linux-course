@@ -10,10 +10,9 @@
 
 #define MAX_BUFFER_SIZE 1024
 #define MAX_QUEUE_NAME_SIZE 20
-#define SERVER_QUEUE_NAME "/server_queue_2"
+#define SERVER_QUEUE_NAME "/server_queue"
 
 void cleanup() {
-    // Zamknij i usuń kolejkę serwera
     mq_unlink(SERVER_QUEUE_NAME);
 }
 
@@ -22,55 +21,54 @@ void sigint_handler(int signum) {
 }
 
 int main() {
-    // Utwórz kolejkę serwera
+    // kolejka serwera
     struct mq_attr attr;
     attr.mq_flags = 0;
     attr.mq_maxmsg = 10;
     attr.mq_msgsize = MAX_BUFFER_SIZE;
     attr.mq_curmsgs = 0;
 
-    mqd_t server_queue = mq_open(SERVER_QUEUE_NAME, O_CREAT | O_RDONLY | O_EXCL, 0666, &attr);
-    if (server_queue == (mqd_t)-1) {
+    mqd_t serverQueue = mq_open(SERVER_QUEUE_NAME, O_CREAT | O_RDONLY | O_EXCL, 0666, &attr);
+    if (serverQueue == (mqd_t)-1) {
         perror("Nie można utworzyć kolejki serwera");
         exit(1);
     }
 
-    // Zarejestruj funkcję do czyszczenia i obsługi sygnału SIGINT
+    // clean i SIGINT
     atexit(cleanup);
     signal(SIGINT, sigint_handler);
 
-    // Wypisz informację o kolejce serwera
+    // start
     printf("Kolejka serwera: %s\n", SERVER_QUEUE_NAME);
 
     while (1) {
-        // Odbierz komunikat z kolejki serwera
+        // fetch handler?
         char buffer[MAX_BUFFER_SIZE + MAX_QUEUE_NAME_SIZE];
         unsigned int prio;
-        ssize_t message_length = mq_receive(server_queue, buffer, MAX_BUFFER_SIZE + MAX_QUEUE_NAME_SIZE, &prio);
-        if (message_length == -1) {
+        ssize_t messageLength = mq_receive(serverQueue, buffer, MAX_BUFFER_SIZE + MAX_QUEUE_NAME_SIZE, &prio);
+        if (messageLength == -1) {
             perror("Błąd podczas odbierania komunikatu od klienta");
             exit(1);
         }
 
-        buffer[message_length] = '\0';
+        buffer[messageLength] = '\0';
 
-        // Odczytaj PID klienta i nazwę jego kolejki
-        char client_pid_str[MAX_QUEUE_NAME_SIZE];
-        sscanf(buffer, "/%[^ ]", client_pid_str);
+        // req.params
+        char clientPidStr[MAX_QUEUE_NAME_SIZE];
+        sscanf(buffer, "/%[^ ]", clientPidStr);
 
-        pid_t client_pid = atoi(client_pid_str);
+        pid_t clientPid = atoi(clientPidStr);
 
-        char client_queue_name[MAX_QUEUE_NAME_SIZE];
-        snprintf(client_queue_name, MAX_QUEUE_NAME_SIZE, "/%d", client_pid);
+        char clientQueueName[MAX_QUEUE_NAME_SIZE];
+        snprintf(clientQueueName, MAX_QUEUE_NAME_SIZE, "/%d", clientPid);
 
-        // Otwórz kolejkę klienta
-        mqd_t client_queue = mq_open(client_queue_name, O_WRONLY);
-        if (client_queue == (mqd_t)-1) {
+        // kolejka klienta
+        mqd_t clientQueue = mq_open(clientQueueName, O_WRONLY);
+        if (clientQueue == (mqd_t)-1) {
             perror("Nie można otworzyć kolejki klienta");
             exit(1);
         }
 
-        // Wykonaj działanie arytmetyczne
         int num1, num2;
         char operator;
         sscanf(buffer, "/%*d %d %c %d", &num1, &operator, &num2);
@@ -94,18 +92,16 @@ int main() {
                 break;
         }
 
-        // Przygotuj komunikat z wynikiem
         char response[MAX_BUFFER_SIZE];
         snprintf(response, MAX_BUFFER_SIZE, "%d", result);
 
-        // Wyślij odpowiedź do klienta
-        if (mq_send(client_queue, response, strlen(response), 0) == -1) {
+        // req.json()
+        if (mq_send(clientQueue, response, strlen(response), 0) == -1) {
             perror("Błąd podczas wysyłania odpowiedzi do klienta");
             exit(1);
         }
 
-        // Zamknij kolejkę klienta
-        mq_close(client_queue);
+        mq_close(clientQueue);
     }
 
     return 0;
